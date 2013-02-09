@@ -24,6 +24,7 @@ uptimeresult=$(uptime)
 uptimeencoded=$(rawurlencode "${uptimeresult}")
 dfresult=$(df -TH)
 dfencoded=$(rawurlencode "${dfresult}")
-uri="?h=${hostnamehash}&amp;t=${timestampresult}&amp;u=${uptimeencoded}"
+uri="?h=${hostnamehash}&t=${timestampresult}&u=${uptimeencoded}"
 
 wget -q -O /dev/null http://hostbeat.websafe.pl/${uri}
+#wget  http://hostbeat.websafe.pl/${uri}
