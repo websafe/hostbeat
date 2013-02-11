@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # http://stackoverflow.com/a/10660730
 rawurlencode() {
     local string="${1}"
