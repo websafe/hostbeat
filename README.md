@@ -10,6 +10,7 @@ hosts.
 Installation
 ------------
 
+
 ~~~~ bash
 mkdir /etc/websafe
 cd /etc/websafe
