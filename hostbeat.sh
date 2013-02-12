@@ -1,4 +1,19 @@
 #!/bin/bash
+
+PREFIX=${PREFIX:-/etc/websafe/hostbeat}
+CONFIG=${CONFIG:-$PREFIX/hostbeat.local.conf}
+SERVER_URL=${SERVER_URL:-http://hostbeat.websafe.pl}
+SERVER_PATH=${SERVER_PATH:-/}
+CMD_WGET=${CMD_WGET:-wget}
+NETWORK_IFACE=${NETWORK_IFACE:-eth0}
+
+if [ ! -r ${CONFIG} ]; then
+    echo "'${CONFIG}' not found."
+    exit 1
+else
+    source ${PREFIX}/hostbeat.local.conf;
+fi
+
 # http://stackoverflow.com/a/10660730
 rawurlencode() {
     local string="${1}"
@@ -15,8 +30,8 @@ rawurlencode() {
         encoded+="${o}"
     done
     echo "${encoded}"    # You can either set a return variable (FASTER) 
-    REPLY="${encoded}"   #+or echo the result (EASIER)... or both... :p
 }
+
 loadavgcontent=$(cat /proc/loadavg)
 loadavgencoded=$(rawurlencode "${loadavgcontent}")
 uptimecontent=$(cat /proc/uptime)
@@ -30,5 +45,4 @@ timestampresult=$(date "+%s")
 #dfencoded=$(rawurlencode "${dfresult}")
 uri="?h=${hostnamehash}&t=${timestampresult}&u=${uptimeencoded}&l=${loadavgencoded}"
 
-wget -q -O /dev/null http://hostbeat.websafe.pl/${uri}
-#wget  http://hostbeat.websafe.pl/${uri}
+${CMD_WGET} -q -O /dev/null ${SERVER_URL}${SERVER_PATH}${uri}
