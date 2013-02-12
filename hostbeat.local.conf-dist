@@ -1,0 +1,4 @@
+##
+## Default monitored network iface is eth0
+##
+#NETWORK_INTERFACE=eth1
