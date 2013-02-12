@@ -62,4 +62,5 @@ uri="?h=${hostnamehash}&t=${timestampresult}&u=${uptimeencoded}&l=${loadavgencod
 ##
 ##
 ##
-${CMD_WGET} --no-check-certificate -q -O /dev/null ${SERVER_URL}${SERVER_PATH}${uri}
+${CMD_WGET} --no-check-certificate -q -O /dev/null \
+    ${SERVER_URL}${SERVER_PATH}${uri}
