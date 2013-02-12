@@ -6,6 +6,11 @@ SERVER_PATH=${SERVER_PATH:-/}
 CMD_WGET=${CMD_WGET:-wget}
 CMD_GREP=${CMD_GREP:-grep}
 CMD_SED=${CMD_SED:-sed}
+CMD_HOSTNAME=${CMD_HOSTNAME:-hostname}
+CMD_DATE=${CMD_DATE:-date}
+CMD_SHA1SUM=${CMD_SHA1SUM:-sha1sum}
+CMD_CUT=${CMD_CUT:-cut}
+CMD_CAT=${CMD_CAT:-cat}
 NETWORK_IFACE=${NETWORK_IFACE:-eth0}
 ##
 ##
@@ -30,33 +35,29 @@ rawurlencode() {
         esac
         encoded+="${o}"
     done
-    echo "${encoded}"    # You can either set a return variable (FASTER) 
+    echo "${encoded}"
 }
 ##
 ##
 ##
-loadavgcontent=$(cat /proc/loadavg)
+loadavgcontent=$(${CMD_CAT} /proc/loadavg)
 loadavgencoded=$(rawurlencode "${loadavgcontent}")
-uptimecontent=$(cat /proc/uptime)
+uptimecontent=$(${CMD_CAT} /proc/uptime)
 uptimeencoded=$(rawurlencode "${uptimecontent}")
 #hostnameresult=$(hostname -f)
-hostnamehash=$(hostname -f | sha1sum | cut -d' ' -f1)
-timestampresult=$(date "+%s")
+hostnamehash=$(${CMD_HOSTNAME} -f | ${CMD_SHA1SUM} | ${CMD_CUT} -d' ' -f1)
+timestampresult=$(${CMD_DATE} "+%s")
 ##
 ##
 ##
 netifacecontent=$(${CMD_GREP} "${NETWORK_IFACE}:" /proc/net/dev \
     | ${CMD_SED} -e "s/^[ ]\+//g" \
-	-e "s/[ ]\+/:/g" \
-	-e "s/^${NETWORK_IFACE}\://g" \
-	-e "s/^\://g"
+        -e "s/[ ]\+/:/g" \
+        -e "s/^${NETWORK_IFACE}\://g" \
+        -e "s/^\://g"
 )
 #echo $netifacecontent
 netifaceencoded=$(rawurlencode "${netifacecontent}")
-#uptimeresult=$(uptime)
-#uptimeencoded=$(rawurlencode "${uptimeresult}")
-#dfresult=$(df -TH)
-#dfencoded=$(rawurlencode "${dfresult}")
 uri="?h=${hostnamehash}&t=${timestampresult}&u=${uptimeencoded}&l=${loadavgencoded}&n=${netifaceencoded}"
 ##
 ##
