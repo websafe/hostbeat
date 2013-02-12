@@ -9,10 +9,7 @@ CMD_GREP=${CMD_GREP:-grep}
 CMD_SED=${CMD_SED:-sed}
 NETWORK_IFACE=${NETWORK_IFACE:-eth0}
 
-if [ ! -r ${CONFIG} ]; then
-    echo "'${CONFIG}' not found."
-    exit 1
-else
+if [ -r ${CONFIG} ]; then
     source ${PREFIX}/hostbeat.local.conf;
 fi
 
