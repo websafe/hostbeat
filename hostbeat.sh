@@ -5,6 +5,8 @@ CONFIG=${CONFIG:-$PREFIX/hostbeat.local.conf}
 SERVER_URL=${SERVER_URL:-http://hostbeat.websafe.pl}
 SERVER_PATH=${SERVER_PATH:-/}
 CMD_WGET=${CMD_WGET:-wget}
+CMD_GREP=${CMD_GREP:-grep}
+CMD_SED=${CMD_SED:-sed}
 NETWORK_IFACE=${NETWORK_IFACE:-eth0}
 
 if [ ! -r ${CONFIG} ]; then
@@ -39,10 +41,15 @@ uptimeencoded=$(rawurlencode "${uptimecontent}")
 #hostnameresult=$(hostname -f)
 hostnamehash=$(hostname -f | sha1sum | cut -d' ' -f1)
 timestampresult=$(date "+%s")
+
+##
+##
+netifacecontent=$(${CMD_GREP} "${NETWORK_IFACE}:" /proc/net/dev | ${CMD_SED} -e "s/^[ ]\+//g" -e "s/[ ]\+/:/g")
+netifaceencoded=$(rawurlencode "${netifacecontent}")
 #uptimeresult=$(uptime)
 #uptimeencoded=$(rawurlencode "${uptimeresult}")
 #dfresult=$(df -TH)
 #dfencoded=$(rawurlencode "${dfresult}")
-uri="?h=${hostnamehash}&t=${timestampresult}&u=${uptimeencoded}&l=${loadavgencoded}"
+uri="?h=${hostnamehash}&t=${timestampresult}&u=${uptimeencoded}&l=${loadavgencoded}&n=${netifaceencoded}"
 
 ${CMD_WGET} -q -O /dev/null ${SERVER_URL}${SERVER_PATH}${uri}
