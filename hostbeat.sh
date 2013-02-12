@@ -41,7 +41,8 @@ timestampresult=$(date "+%s")
 
 ##
 ##
-netifacecontent=$(${CMD_GREP} "${NETWORK_IFACE}:" /proc/net/dev | ${CMD_SED} -e "s/^[ ]\+//g" -e "s/[ ]\+/:/g")
+netifacecontent=$(${CMD_GREP} "${NETWORK_IFACE}:" /proc/net/dev | ${CMD_SED} -e "s/^[ ]\+//g" -e "s/[ ]\+/:/g" -e "s/^${NETWORK_IFACE}\://g" -e "s/^\://g")
+#echo $netifacecontent
 netifaceencoded=$(rawurlencode "${netifacecontent}")
 #uptimeresult=$(uptime)
 #uptimeencoded=$(rawurlencode "${uptimeresult}")
